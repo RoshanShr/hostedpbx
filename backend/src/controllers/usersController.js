@@ -1,53 +1,34 @@
 //users add edit delete is done here
-const bcrypt = require('bcryptjs');
-const User = require('../models/userModel');
+
+const AppDataSource = require('../config/database'); // Import the data source
+
 
 exports.getUsers = async (req, res) => {
     try {
-        // call the model to connect to database and retrieve data
-        const users = await User.fetchAll(); // Wait for the results from the fetchAll method
-        res.json(users); // Send the results as a JSON response
+        const userRepository = AppDataSource.getRepository('User'); // Get repository by entity name
+        const users = await userRepository.find(); // Fetch all users
+        res.json(users); // Return users as JSON
     } catch (err) {
-        console.error('Error in getAllUsers:', err);
-        res.status(500).send('Database error'); // Handle errors appropriately
+        console.error('Error fetching users:', err);
+        res.status(500).send('Database error');
     }
-}
+};
 
-exports.registerUser = async (req, res) => {
-    let userDetails = req.body;
-    if (userDetails.username != undefined && userDetails.email != undefined & userDetails.password != undefined) {
-        try {
-            bcrypt.genSalt(10,(err,salt)=>{
-                if(!err)
-                {
-                    bcrypt.hash(userDetails.password,salt,async (err,hpass)=>{
-                        if(!err)
-                        {
-                            userDetails.password=hpass;
-                            try 
-                            {
-                                const user = new User(null, userDetails.username, userDetails.email,userDetails.password);
-                                const users = await user.register(); 
-                                res.status(201).send({message:"User Registered"})
-                            }
-                            catch(err){
-                                console.log(err);
-                                res.status(500).send({message:"Some Problem"})
-                            }
-                        }
-                    })
-                }
-            })
-        } catch (err) {
-            console.error('Error in getAllUsers:', err);
-            res.status(500).send('Database error'); // Handle errors appropriately
-        }
-    } else {
-        console.error('Error in getAllUsers:', err);
-    }
-}
 
+
+// exports.getUsers = async (req, res) => {
+//     try {
+//         // call the model to connect to database and retrieve data
+//         const users = await User.fetchAll(); // Wait for the results from the fetchAll method
+//         res.json(users); // Send the results as a JSON response
+//     } catch (err) {
+//         console.error('Error in getAllUsers:', err);
+//         res.status(500).send('Database error'); // Handle errors appropriately
+//     }
+// }
 
 exports.getCredentials = async (req, res) => {
-    res.status(201).send({message:"Coming after token passed"})
+    res.status(201).send({
+        message: "Coming after token passed"
+    })
 }
