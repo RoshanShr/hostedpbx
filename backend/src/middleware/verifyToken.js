@@ -22,7 +22,7 @@ function verifyToken(req,res,next)
     }
     else 
     {
-        res.send({message:"Please send a token"})
+        res.status(403).send({message:"Please send a token"})
     }
     
 }

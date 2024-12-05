@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const { DataSource } = require('typeorm');
 const User = require('../models/userModel'); // Adjust path to the User model
+const Client = require('../models/clientModel'); // Adjust path to the User model
 
 const AppDataSource = new DataSource({
     type: 'mysql', // or your preferred database type
@@ -12,7 +13,7 @@ const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: true, // Automatically sync schema (use false in production)
   //  logging: true, // Enable logging (optional)
-    entities: [User], // Register your entity here
+    entities: [User,Client], // Register your entity here
 });
 
 AppDataSource.initialize()
