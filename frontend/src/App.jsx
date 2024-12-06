@@ -7,11 +7,26 @@ import Clients from './components/Clients';
 import { BrowserRouter, Routes, Route,Navigate  } from 'react-router-dom';
 import Private from './components/Private'
 import { UserContext } from './contexts/UserContext'
+import {isTokenExpired } from './utils/checkToken';
+import React, { useEffect } from "react";
+
+
 
 
 
 function App() {
 
+  useEffect(() => {
+    // Get the token from localStorage or sessionStorage
+    if(localStorage.getItem("hostedpbx")!=null){
+      const token = JSON.parse(localStorage.getItem("hostedpbx"));
+      if (isTokenExpired(token.token)) {
+          // Token is expired, log out the user
+          localStorage.removeItem("hostedpbx"); // Remove token
+      }
+    }
+   
+}, []);
 
   const [loggedUser, setLoggedUser]
     = useState(JSON.parse(localStorage.getItem("hostedpbx")));

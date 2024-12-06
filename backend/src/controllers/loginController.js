@@ -26,7 +26,9 @@ exports.checkUser = async (req, res) => {
                 if (success == true) {
                     jwt.sign({
                         email: userDetails.email
-                    }, "hostedpbx", (err, token) => {
+                    }, "hostedpbx", {
+                        expiresIn: '1m'
+                    }, (err, token) => {
                         if (!err) {
                             res.send({
                                 message: "Login Success",
