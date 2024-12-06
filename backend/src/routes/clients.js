@@ -6,6 +6,7 @@ const verifyToken = require("../middleware/verifyToken")
 
 
 router.get("/clients",verifyToken,clientController.getClients);
-router.post("/addClient",verifyToken,clientController.addClient);
+router.post("/clients",verifyToken,clientController.addClient);
+router.delete("/clients",verifyToken,clientController.deleteClient);
 
 module.exports = router;

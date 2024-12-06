@@ -3,61 +3,84 @@ import Sidebar from "../components/Sidebar";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useContext } from "react";
-
+import {useQuery, useMutation, useQueryClient} from "react-query"
+import {getClient, addClient, updateClient, deleteClient} from "../api/clientApi";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import { addClient, getClients } from "../../../backend/src/controllers/clientController";
+// import { deleteClient, updateClient } from "../api/clientApi";
 
 const Clients = () => {
 
+    const notify = (type, msg) => toast[type](msg);
     const loggedData = useContext(UserContext);
     const navigate = useNavigate();
+
     const [showForm, setShowForm] = useState(false);
-    const [clients, setClients] = useState({});
+    // const [clients, setClients] = useState({});
 
+    const queryClient = new useQueryClient();
 
-    const notify = () => toast.success("Client added successfully!");
+    const{
+        isLoading,
+        isError,
+        error,
+        data: clients
+    } = useQuery(['clients'], 
+        ()=> getClient(loggedData))
+
+    //same for edit/delete
+    const addClientMutation = useMutation(addClient, {
+        onSuccess : () =>{
+            //Invalidates cache and refetch
+           queryClient.invalidateQueries("clients");
+           notify("success", "Client added successfully")
+        }
+    })    
+
+    const deleteClientMutation = useMutation(deleteClient, {
+        onSuccess : (response) =>{
+            //Invalidates cache and refetch
+           queryClient.invalidateQueries("clients");
+           if(response.name=='AxiosError'){
+            notify("error",response.response.data.message)
+           }else{
+            notify("success","Client deleted successfully")
+
+           }
+        }
+    })    
 
     function logout() {
         localStorage.removeItem("hostedpbx");
         loggedData.setLoggedUser(null);
         navigate("/login");
     }
-    // if (clients.length == undefined) {
-       
-    // }
-
+ 
     useEffect(()=>{
-        getClients();
+        //getClients();
     },[])
 
 
-    function getClients() {
-        fetch("http://localhost:5000/clients", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + loggedData.loggedUser.token
-            }
 
-        }).then((response) => {
-            return response.json();
-
-        }).then((data) => {
-            if (data != undefined) {
-                setClients(data);
-            }
-
-
-        }).catch((err) => {
-            console.log(err)
-        })
-
-    }
     const [clientData, setClientData] = useState({
         name: "",
         alias: ""
     })
+  
+    let content
+    if(isLoading){
+        content ="Loading data";
+        //notify("Fetching data successfully");
+
+    }else if(isError){
+        content =error.message;
+    }else{                
+      //  notify("Data fetched successfully");
+        content  = clients;
+    }
+
     function handleInput(event) {
         setClientData((prevState) => {
             return { ...prevState, [event.target.name]: event.target.value }
@@ -66,29 +89,11 @@ const Clients = () => {
 
     function handleSubmit(event) {
         event.preventDefault()
-        fetch("http://localhost:5000/addClient", {
-            method: "POST",
-            body: JSON.stringify(clientData),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + loggedData.loggedUser.token
-            }
+        addClientMutation.mutate({loggedData, clientData})
+    }
 
-        }).then((response) => {
-            if (response.status == 201) {
-                notify();
-            }
-            return response.json();
-        }).then((data) => {
-            setClients((prevState) => [
-                ...prevState, 
-                { name: data.data.name, alias: data.data.alias } // Assuming result contains name, alias, id
-            ]);
-            setShowForm(false);
-        }).catch((err) => {
-            console.log(err)
-        })
-
+    function handleDelete(id) {
+        deleteClientMutation.mutate({loggedData, id:id})
     }
     return (
         <div className="d-flex">
@@ -144,14 +149,18 @@ const Clients = () => {
                         <tr>
                             <th>Client</th>
                             <th>Alias</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.isArray(clients) && clients.length > 0 ? (
-                            clients.map((item, index) => (
+                        {Array.isArray(content) && content.length > 0 ? (
+                            content.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.name}</td>
                                     <td>{item.alias}</td>
+                                    <td><button className="btn btn-danger" onClick={()=>{
+                                        handleDelete(item.id)
+                                    }}>Delete</button></td>
                                 </tr>
                             ))
                         ) : (

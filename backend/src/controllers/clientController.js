@@ -44,3 +44,50 @@ exports.addClient = async (req, res) => {
 
     }
 }
+
+
+exports.deleteClient = async (req, res) => {
+    let {
+        id
+    } = req.body; // Get user data from request body
+    if (id) {
+        try {
+
+            // Check if the user exists
+            const client = await AppDataSource
+                .createQueryBuilder()
+                .select("client")
+                .from(Client, "client")
+                .where("client.id = :id", {
+                    id: id
+                })
+                .getOne();
+
+            if (!client) {
+                return res.status(404).send({
+                    message: 'Client not found'
+                }); // Return 404 if user does not exist
+            }
+
+
+            await AppDataSource
+                .createQueryBuilder()
+                .delete()
+                .from(Client)
+                .where("id = :id", {
+                    id: id
+                })
+                .execute()
+            res.status(200).send({
+                message: "Client deleted successfully"
+            })
+        } catch (err) {
+            res.status(500).send({
+                message: "Some Problem"
+            })
+        }
+    } else {
+        res.status(500).send('Id is missing'); // Handle errors appropriately
+
+    }
+}
