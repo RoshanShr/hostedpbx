@@ -16,17 +16,17 @@ import React, { useEffect } from "react";
 
 function App() {
 
-  useEffect(() => {
-    // Get the token from localStorage or sessionStorage
-    if(localStorage.getItem("hostedpbx")!=null){
-      const token = JSON.parse(localStorage.getItem("hostedpbx"));
-      if (isTokenExpired(token.token)) {
-          // Token is expired, log out the user
-          localStorage.removeItem("hostedpbx"); // Remove token
-      }
-    }
+//   useEffect(() => {
+//     // Get the token from localStorage or sessionStorage
+//     if(localStorage.getItem("hostedpbx")!=null){
+//       const token = JSON.parse(localStorage.getItem("hostedpbx"));
+//       if (isTokenExpired(token.token)) {
+//           // Token is expired, log out the user
+//           localStorage.removeItem("hostedpbx"); // Remove token
+//       }
+//     }
    
-}, []);
+// }, []);
 
   const [loggedUser, setLoggedUser]
     = useState(JSON.parse(localStorage.getItem("hostedpbx")));

@@ -3,83 +3,38 @@ import Sidebar from "../components/Sidebar";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useContext } from "react";
-import {useQuery, useMutation, useQueryClient} from "react-query"
-import {getClient, addClient, updateClient, deleteClient} from "../api/clientApi";
+import { ToastContainer } from 'react-toastify';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-// import { addClient, getClients } from "../../../backend/src/controllers/clientController";
-// import { deleteClient, updateClient } from "../api/clientApi";
+
+import { useGetClients, useAddClient, useDeleteClient } from "../api/clientApi";
 
 const Clients = () => {
 
-    const notify = (type, msg) => toast[type](msg);
     const loggedData = useContext(UserContext);
     const navigate = useNavigate();
 
     const [showForm, setShowForm] = useState(false);
     // const [clients, setClients] = useState({});
+    const [clientData, setClientData] = useState({
+        name: "",
+        alias: ""
+    })
 
-    const queryClient = new useQueryClient();
-
-    const{
-        isLoading,
-        isError,
-        error,
-        data: clients
-    } = useQuery(['clients'], 
-        ()=> getClient(loggedData))
-
-    //same for edit/delete
-    const addClientMutation = useMutation(addClient, {
-        onSuccess : () =>{
-            //Invalidates cache and refetch
-           queryClient.invalidateQueries("clients");
-           notify("success", "Client added successfully")
-        }
-    })    
-
-    const deleteClientMutation = useMutation(deleteClient, {
-        onSuccess : (response) =>{
-            //Invalidates cache and refetch
-           queryClient.invalidateQueries("clients");
-           if(response.name=='AxiosError'){
-            notify("error",response.response.data.message)
-           }else{
-            notify("success","Client deleted successfully")
-
-           }
-        }
-    })    
+    const { data: clients, isLoading, isError, error } = useGetClients(loggedData);
+    const addClientMutation = useAddClient(loggedData);
+    const deleteClientMutation = useDeleteClient(loggedData);
 
     function logout() {
         localStorage.removeItem("hostedpbx");
         loggedData.setLoggedUser(null);
         navigate("/login");
     }
- 
-    useEffect(()=>{
-        //getClients();
-    },[])
+
+    // useEffect(() => {
+    //     getClients();
+    // }, [])
 
 
-
-    const [clientData, setClientData] = useState({
-        name: "",
-        alias: ""
-    })
-  
-    let content
-    if(isLoading){
-        content ="Loading data";
-        //notify("Fetching data successfully");
-
-    }else if(isError){
-        content =error.message;
-    }else{                
-      //  notify("Data fetched successfully");
-        content  = clients;
-    }
 
     function handleInput(event) {
         setClientData((prevState) => {
@@ -89,17 +44,16 @@ const Clients = () => {
 
     function handleSubmit(event) {
         event.preventDefault()
-        addClientMutation.mutate({loggedData, clientData})
+        addClientMutation.mutate(clientData)
     }
 
     function handleDelete(id) {
-        deleteClientMutation.mutate({loggedData, id:id})
+        deleteClientMutation.mutate(id)
     }
     return (
         <div className="d-flex">
             <Sidebar />
             <ToastContainer />
-
             <div className="flex-grow-1 p-4">
                 <div>
                     {/* Button to toggle form */}
@@ -153,19 +107,32 @@ const Clients = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.isArray(content) && content.length > 0 ? (
-                            content.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.name}</td>
-                                    <td>{item.alias}</td>
-                                    <td><button className="btn btn-danger" onClick={()=>{
-                                        handleDelete(item.id)
-                                    }}>Delete</button></td>
+                        {isLoading ? (
+                            <tr>
+                                <td colSpan="3">Loading...</td>
+                            </tr>
+                        ) : isError ? (
+                            <tr>
+                                <td colSpan="3">Error: {error.message}</td>
+                            </tr>
+                        ) : clients.length > 0 ? (
+                            clients.map((client) => (
+                                <tr key={client.id}>
+                                    <td>{client.name}</td>
+                                    <td>{client.alias}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() => handleDelete(client.id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="2">No clients available</td>
+                                <td colSpan="3">No clients available</td>
                             </tr>
                         )}
                     </tbody>

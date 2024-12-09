@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const navigate = useNavigate();
     const notify = () => toast.error("Wrong username or password!");
@@ -26,7 +27,7 @@ export default function Login() {
 
     function handleSubmit(event) {
         event.preventDefault()
-        fetch("http://localhost:5000/login", {
+        fetch(apiUrl+"login", {
             method: "POST",
             body: JSON.stringify(userCreds),
             headers: {

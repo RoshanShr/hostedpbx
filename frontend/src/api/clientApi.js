@@ -1,7 +1,21 @@
 import axios from "axios";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient
+} from "react-query";
+
+import {
+    toast
+} from 'react-toastify';
+
+const notify = (type, msg) => toast[type](msg);
+
+const apiUrl =
+    import.meta.env.VITE_API_URL;
 
 const clientApi = axios.create({
-    baseURL: "http://localhost:5000"
+    baseURL: apiUrl
 });
 
 export const getClient = async (loggedData) => {
@@ -13,13 +27,13 @@ export const getClient = async (loggedData) => {
     return response.data;
 }
 
-export const addClient = async ({
-    loggedData,
-    clientData
-}) => {
-    await clientApi.post("/clients", clientData, {
+
+export const addClient = async (
+    data
+) => {
+    await clientApi.post("/clients", data.clientData, {
         headers: {
-            "Authorization": `Bearer ${loggedData.loggedUser.token}`
+            "Authorization": `Bearer ${data.loggedData.loggedUser.token}`
         }
     });
 
@@ -61,10 +75,45 @@ export const deleteClient = async ({
 
 }
 
-// export const deleteClient = async ({
-//     id
-// }) => {
-//     return await clientApi.post(`/clients/${id}`, id);
-// }
+// React Query Hooks
 
+export const useGetClients = (loggedData) => {
+    return useQuery(["clients"], () => getClient(loggedData), {
+        onError: (error) => {
+            toast.error(`Failed to fetch clients: ${error.message}`);
+        },
+    });
+};
+
+export const useAddClient = (loggedData) => {
+    const queryClient = useQueryClient();
+    return useMutation((clientData) => addClient({
+        loggedData,
+        clientData
+    }), {
+        onSuccess: () => {
+            queryClient.invalidateQueries("clients");
+            notify("success", "Client added successfully")
+        },
+        onError: (error) => {
+            notify("error", `Error while adding client:${error.message}`)
+        },
+    });
+};
+
+export const useDeleteClient = (loggedData) => {
+    const queryClient = useQueryClient();
+    return useMutation((id) => deleteClient({
+        loggedData,
+        id
+    }), {
+        onSuccess: () => {
+            queryClient.invalidateQueries("clients");
+            notify("success", "Client deleted successfully")
+        },
+        onError: (error) => {
+            notify("error", `Error while deleting client:${error.message}`)
+        },
+    });
+}
 export default clientApi;
