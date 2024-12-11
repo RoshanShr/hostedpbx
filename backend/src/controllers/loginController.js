@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const AppDataSource = require('../config/database'); // Import the data source
 const User = require('../models/userModel');
+require('dotenv').config();
 
 exports.checkUser = async (req, res) => {
     try {
@@ -26,7 +27,7 @@ exports.checkUser = async (req, res) => {
                 if (success == true) {
                     jwt.sign({
                         email: userDetails.email
-                    }, "hostedpbx", (err, token) => {
+                    }, process.env.JWT_SECRET_KEY, (err, token) => {
                         if (!err) {
                             res.send({
                                 message: "Login Success",

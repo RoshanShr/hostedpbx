@@ -1,21 +1,10 @@
+import React, { useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import { UserContext } from "../contexts/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useState, useContext } from "react";
 import { ToastContainer } from 'react-toastify';
-import { useFormik } from 'formik';
-import { clientSchema } from "../schemas/clientSchema";
 import { useGetClients, useAddClient, useDeleteClient } from "../api/clientApi";
-
-import { confirmAlert } from 'react-confirm-alert'; // Import
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-
-
-const initialValues = {
-    name: "",
-    alias: ""
-
-}
 
 const Clients = () => {
 
@@ -23,20 +12,15 @@ const Clients = () => {
     const navigate = useNavigate();
 
     const [showForm, setShowForm] = useState(false);
+    // const [clients, setClients] = useState({});
+    const [clientData, setClientData] = useState({
+        name: "",
+        alias: ""
+    })
 
     const { data: clients, isLoading, isError, error } = useGetClients(loggedData);
     const addClientMutation = useAddClient(loggedData);
     const deleteClientMutation = useDeleteClient(loggedData);
-
-
-    const formik = useFormik({
-        initialValues: initialValues,
-        validationSchema: clientSchema,
-        onSubmit: (values, action) => {
-            submitData(values);
-            action.resetForm();
-        }
-    })
 
     function logout() {
         localStorage.removeItem("hostedpbx");
@@ -44,29 +28,22 @@ const Clients = () => {
         navigate("/login");
     }
 
+    // useEffect(() => {
+    //     getClients();
+    // }, [])
 
-    function submitData(clientData) {
-        addClientMutation.mutate(clientData)
+
+
+    function handleInput(event) {
+        setClientData((prevState) => {
+            return { ...prevState, [event.target.name]: event.target.value }
+        })
     }
 
-
-    function deleteConfirmation(id) {
-        confirmAlert({
-            title: 'Confirm to delete',
-            message: 'Are you sure to do delete?',
-            buttons: [
-                {
-                    label: 'Yes',
-                    onClick: () => handleDelete(id)
-                },
-                {
-                    label: 'No',
-                   // onClick: () => alert('Click No')
-                }
-            ]
-        });
-    };
-
+    function handleSubmit(event) {
+        event.preventDefault()
+        addClientMutation.mutate(clientData)
+    }
 
     function handleDelete(id) {
         deleteClientMutation.mutate(id)
@@ -92,28 +69,26 @@ const Clients = () => {
 
                 {/* Add Client Form */}
                 {showForm && (
-                    <form className="mb-4" onSubmit={formik.handleSubmit}>
+                    <form className="mb-4" onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">Name</label>
                             <input
                                 type="text"
-                                id="name" onChange={formik.handleChange} onBlur={formik.handleBlur}
-                                name="name" value={formik.values.name}
+                                id="name" onChange={handleInput}
+                                name="name" value={clientData.name}
                                 className="form-control"
+                                required
                             />
-                            {formik.errors.name && formik.touched.name ? <p className="form-error">{formik.errors.name}</p> : null}
-
                         </div>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">Alias</label>
                             <input
                                 type="text"
-                                id="text" onChange={formik.handleChange} onBlur={formik.handleBlur}
-                                name="alias" value={formik.values.alias}
+                                id="text" onChange={handleInput}
+                                name="alias" value={clientData.alias}
                                 className="form-control"
+                                required
                             />
-                            {formik.errors.alias && formik.touched.alias ? <p className="form-error">{formik.errors.alias}</p> : null}
-
                         </div>
                         <button type="submit" className="btn btn-success">Submit</button>
                     </form>
@@ -146,7 +121,7 @@ const Clients = () => {
                                     <td>
                                         <button
                                             className="btn btn-danger"
-                                            onClick={() => deleteConfirmation(client.id)}
+                                            onClick={() => handleDelete(client.id)}
                                         >
                                             Delete
                                         </button>
