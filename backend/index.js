@@ -12,6 +12,6 @@ app.use(loginRouter);
 app.use(usersRouter);
 app.use(clientRouter);
 
-app.listen(5001, () => {
+app.listen(5000, () => {
     console.log("Server is up and running");
 })

@@ -3,6 +3,7 @@ import './App.css'
 import Login from './components/Login';
 import PageNotFound from './components/404';
 import Dashboard from './components/Dashboard';
+import Register from './components/Register';
 import Clients from './components/Clients';
 import { BrowserRouter, Routes, Route,Navigate  } from 'react-router-dom';
 import Private from './components/Private'
@@ -34,12 +35,8 @@ function App() {
   return (
     <>
       <UserContext.Provider value={{ loggedUser, setLoggedUser }}>
-
         <BrowserRouter>
-
           <Routes>
-            /* Conditional route for /login */
-
             <Route
               path="/"
               element={
@@ -53,6 +50,7 @@ function App() {
               }
             />
             <Route path='/logout' element={<Login />}></Route>
+            <Route path='/register' element={<Register />}></Route>
             <Route path='/clients' element={<Private Component={Clients} />} />
             <Route path='*' element={<PageNotFound />}></Route>
           </Routes>
