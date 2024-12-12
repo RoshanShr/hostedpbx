@@ -1,6 +1,5 @@
 import Sidebar from "../components/Sidebar";
 import { UserContext } from "../contexts/UserContext";
-import { useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 import { ToastContainer } from 'react-toastify';
 import { useFormik } from 'formik';
@@ -20,7 +19,6 @@ const initialValues = {
 const Clients = () => {
 
     const loggedData = useContext(UserContext);
-    const navigate = useNavigate();
 
     const [showForm, setShowForm] = useState(false);
 
@@ -38,11 +36,6 @@ const Clients = () => {
         }
     })
 
-    function logout() {
-        localStorage.removeItem("hostedpbx");
-        loggedData.setLoggedUser(null);
-        navigate("/login");
-    }
 
 
     function submitData(clientData) {
@@ -86,9 +79,6 @@ const Clients = () => {
                     </button>
                 </div>
 
-                <div>
-                    <button className="btn btn-danger mb-4" onClick={logout}>Logout</button>
-                </div>
 
                 {/* Add Client Form */}
                 {showForm && (

@@ -5,6 +5,7 @@ import PageNotFound from './components/404';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
 import Clients from './components/Clients';
+import Reports from './components/Reports';
 import { BrowserRouter, Routes, Route,Navigate  } from 'react-router-dom';
 import Private from './components/Private'
 import { UserContext } from './contexts/UserContext'
@@ -51,6 +52,7 @@ function App() {
             />
             <Route path='/logout' element={<Login />}></Route>
             <Route path='/register' element={<Register />}></Route>
+            <Route path='/reports'  element={<Private Component={Reports} />}></Route>
             <Route path='/clients' element={<Private Component={Clients} />} />
             <Route path='*' element={<PageNotFound />}></Route>
           </Routes>
