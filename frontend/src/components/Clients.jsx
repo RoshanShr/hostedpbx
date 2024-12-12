@@ -31,7 +31,7 @@ const Clients = () => {
 
     const formik = useFormik({
         initialValues: initialValues,
-        validationSchema: clientSchema,
+        validationSchema: clientSchema(clients),
         onSubmit: (values, action) => {
             submitData(values);
             action.resetForm();
