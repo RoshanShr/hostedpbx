@@ -2,7 +2,6 @@ import { useState } from 'react'
 import './App.css'
 import Login from './components/Login';
 import PageNotFound from './components/404';
-import Dashboard from './components/Dashboard';
 import Register from './components/Register';
 import Clients from './components/Clients';
 import Reports from './components/Reports';
