@@ -5,12 +5,12 @@ import PageNotFound from './components/404';
 import Register from './components/Register';
 import Clients from './components/Clients';
 import Reports from './components/Reports';
-import { BrowserRouter, Routes, Route,Navigate  } from 'react-router-dom';
+import { BrowserRouter, Routes, Route,Navigate, createBrowserRouter, Outlet  } from 'react-router-dom';
 import Private from './components/Private'
 import { UserContext } from './contexts/UserContext'
 import {isTokenExpired } from './utils/checkToken';
 import React, { useEffect } from "react";
-
+import AuthHandler from './common/AuthHandler';
 
 
 
@@ -29,8 +29,31 @@ function App() {
    
 // }, []);
 
-  const [loggedUser, setLoggedUser]
-    = useState(JSON.parse(localStorage.getItem("hostedpbx")));
+
+const [loggedUser, setLoggedUser]
+= useState(JSON.parse(localStorage.getItem("hostedpbx")));
+
+// createBrowserRouter([
+//   {
+//     path:'',
+//     Component:<Outlet/>,
+//     children:[
+//       {
+//         path:'',
+//         Component: <><Outlet/></>,
+//         children:[
+//           {
+//             path: 'login',
+//             Component: <Login/>
+//           },{
+//             path: 'register',
+//             Component: <Register/>
+//           }
+//         ]
+//       }
+//     ]
+//   }
+// ])
 
   return (
     <>
@@ -40,7 +63,7 @@ function App() {
             <Route
               path="/"
               element={
-                loggedUser != null  ? <Navigate to="/clients" /> : <Login />
+                 <Login />
               }
             />
             <Route

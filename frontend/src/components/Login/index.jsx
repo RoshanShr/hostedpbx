@@ -1,33 +1,40 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom"
+import { UserContext } from "../contexts/UserContext";
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { registerSchema } from "../schemas/registerSchema";
+import { loginSchema } from "../schemas/loginSchema";
 import { useFormik } from 'formik';
+
+import LoginCSS from './stylesheet/login.module.css'
+
 
 const initialValues = {
     username: "",
-    email: "",
-    password: "",
-    confirm_password: ""
+    password: ""
 
-} 
-
-export default function Register() {
+}
+export default function Login() {
     const apiUrl = import.meta.env.VITE_API_URL;
+    const jwtSecretKey = import.meta.env.VITE_JWT_SECRET_KEY;
+
     const navigate = useNavigate();
+    const notify = () => toast.error("Wrong username or password!");
+    const loggedData = useContext(UserContext);
 
     const formik = useFormik({
         initialValues: initialValues,
-        validationSchema: registerSchema,
-        onSubmit: (values, action) => {
+        validationSchema: loginSchema,
+        onSubmit: (values) => {
             submitData(values);
-            action.resetForm();
+
         }
     })
 
     function submitData(userCreds) {
-        fetch(apiUrl + "register", {
+        fetch(apiUrl + "login", {
             method: "POST",
             body: JSON.stringify(userCreds),
             headers: {
@@ -35,13 +42,19 @@ export default function Register() {
             }
 
         }).then((response) => {
-            if (response.status != 201) {
-                toast.error("Error while registering");
-            } else {
-                toast.success("User registered successfully");
+            if (response.status != 200) {
+                notify();
             }
 
             return response.json();
+
+        }).then((data) => {
+            if (data.token != undefined) {
+                localStorage.setItem(jwtSecretKey, JSON.stringify(data));
+                loggedData.setLoggedUser(data);
+                navigate("/clients")
+                notify();
+            }
 
         }).catch((err) => {
             console.log(err)
@@ -49,14 +62,14 @@ export default function Register() {
 
     }
 
-    function loginPage() {
-        navigate("/login")
+    function registerPage(){
+        navigate("/register")
     }
 
     return (
-        <div className="container vh-100 d-flex justify-content-center align-items-center">
+        <div className={clsx(LoginCSS.container, "container vh-100 d-flex justify-content-center align-items-center")}>
             <div className="card p-4 shadow" style={{ width: "300px" }}>
-                <h3 className="text-center">Register</h3>
+                <h3 className="text-center">Login</h3>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="mb-3">
                         <label htmlFor="username" className="form-label">Username:</label>
@@ -68,15 +81,6 @@ export default function Register() {
                         {formik.errors.username && formik.touched.username ? <p className="form-error">{formik.errors.username}</p> : null}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="email" className="form-label">Email:</label>
-                        <input
-                            type="email"
-                            id="email" onChange={formik.handleChange} onBlur={formik.handleBlur}
-                            className="form-control" name="email" value={formik.values.email}
-                        />
-                        {formik.errors.email && formik.touched.email ? <p className="form-error">{formik.errors.email}</p> : null}
-                    </div>
-                    <div className="mb-3">
                         <label htmlFor="password" className="form-label">Password:</label>
                         <input
                             type="password"
@@ -85,17 +89,9 @@ export default function Register() {
                         />
                         {formik.errors.password && formik.touched.password ? <p className="form-error">{formik.errors.password}</p> : null}
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="confirm_password" className="form-label">Password:</label>
-                        <input
-                            type="confirm_password"
-                            id="confirm_password" onChange={formik.handleChange} onBlur={formik.handleBlur}
-                            className="form-control" name="confirm_password" value={formik.values.confirm_password}
-                        />
-                        {formik.errors.confirm_password && formik.touched.confirm_password ? <p className="form-error">{formik.errors.confirm_password}</p> : null}
-                    </div>
-                    <button type="submit" className="btn btn-primary w-100 btn">Register</button>
-                    <button className="btn btn-success w-100" onClick={loginPage}>Login</button>
+                    
+                    <button type="submit" className="btn btn-success w-100 btn">Login</button>
+                    <button className="btn btn-primary w-100" onClick={registerPage}>Register</button>
                 </form>
             </div>
             <ToastContainer />
