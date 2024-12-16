@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import Login from './components/Login';
+import Login from './components/Login/index';
 import PageNotFound from './components/404';
 import Register from './components/Register';
 import Clients from './components/Clients';

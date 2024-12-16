@@ -1,10 +1,11 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const AppDataSource = require('../config/database'); // Import the data source
-const User = require('../models/userModel');
-require('dotenv').config();
+import 'dotenv/config';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import  User  from '../models/userModel.js';
+import { AppDataSource} from '../config/database.js';
 
-exports.checkUser = async (req, res) => {
+
+export const checkUser = async (req, res) => {
     try {
         let userDetails = req.body;
         const loginData = await AppDataSource
@@ -54,7 +55,7 @@ exports.checkUser = async (req, res) => {
 
 
 
-exports.registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
     let {
         username,
         email,

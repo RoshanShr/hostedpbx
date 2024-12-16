@@ -1,11 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom"
-import { UserContext } from "../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { loginSchema } from "../schemas/loginSchema";
+import { loginSchema } from "../../schemas/loginSchema";
 import { useFormik } from 'formik';
 
 import LoginCSS from './stylesheet/login.module.css'
@@ -67,7 +67,7 @@ export default function Login() {
     }
 
     return (
-        <div className={clsx(LoginCSS.container, "container vh-100 d-flex justify-content-center align-items-center")}>
+        <div className="container vh-100 d-flex justify-content-center align-items-center">
             <div className="card p-4 shadow" style={{ width: "300px" }}>
                 <h3 className="text-center">Login</h3>
                 <form onSubmit={formik.handleSubmit}>

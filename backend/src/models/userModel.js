@@ -1,6 +1,6 @@
-const { EntitySchema } = require('typeorm');
+import { EntitySchema } from 'typeorm';
 
-module.exports = new EntitySchema({
+const User = new EntitySchema({
     name: 'User', // Entity name
     tableName: 'pbx_users', // Table name in the database
     columns: {
@@ -23,6 +23,9 @@ module.exports = new EntitySchema({
         },
     },
 });
+
+export default User;
+
 // const db = require('../config/database');
 
 // module.exports = class User {

@@ -1,12 +1,11 @@
-const express = require('express');
+import express from 'express';
+import {getClients, addClient, deleteClient} from '../controllers/clientController.js';
+import verifyToken from '../middleware/verifyToken.js';
+
 const router = express.Router();
 
-const clientController = require('../controllers/clientController');
-const verifyToken = require("../middleware/verifyToken")
+router.get("/clients",verifyToken,getClients);
+router.post("/clients",verifyToken,addClient);
+router.delete("/clients",verifyToken,deleteClient);
 
-
-router.get("/clients",verifyToken,clientController.getClients);
-router.post("/clients",verifyToken,clientController.addClient);
-router.delete("/clients",verifyToken,clientController.deleteClient);
-
-module.exports = router;
+export default router;

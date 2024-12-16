@@ -1,9 +1,8 @@
 //users add edit delete is done here
+import { AppDataSource, AppDataSource2 } from '../config/database.js';
+import 'dotenv/config';
 
-const AppDataSource = require('../config/database'); // Import the data source
-
-
-exports.getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
     try {
         const userRepository = AppDataSource.getRepository('User'); // Get repository by entity name
         const users = await userRepository.find(); // Fetch all users
@@ -27,7 +26,7 @@ exports.getUsers = async (req, res) => {
 //     }
 // }
 
-exports.getCredentials = async (req, res) => {
+export const getCredentials = async (req, res) => {
     res.status(201).send({
         message: "Coming after token passed"
     })

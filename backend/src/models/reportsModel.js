@@ -1,8 +1,8 @@
 import { EntitySchema } from 'typeorm';
 
-const Client = new EntitySchema({
-    name: 'Client', // Entity name
-    tableName: 'pbx_clients', // Table name in the database
+const Report =  new EntitySchema({
+    name: 'Reports', // Entity name
+    tableName: 'pbx_report', // Table name in the database
     columns: {
         id: {
             primary: true,
@@ -20,5 +20,4 @@ const Client = new EntitySchema({
     },
 });
 
-
-export default Client;
+export default Report;

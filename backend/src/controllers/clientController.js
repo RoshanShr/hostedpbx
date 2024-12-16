@@ -1,7 +1,8 @@
-const AppDataSource = require('../config/database'); // Import the data source
-const Client = require('../models/clientModel');
+import Client from '../models/clientModel.js';
 
-exports.getClients = async (req, res) => {
+import { AppDataSource, AppDataSource2 } from '../config/database.js';
+
+export const getClients = async (req, res) => {
     try {
         const clientRepository = AppDataSource.getRepository('Client'); // Get repository by entity name
         const clients = await clientRepository.find(); // Fetch all users
@@ -12,8 +13,7 @@ exports.getClients = async (req, res) => {
     }
 };
 
-
-exports.addClient = async (req, res) => {
+export const addClient = async (req, res) => {
     let {
         name,
         alias
@@ -46,7 +46,7 @@ exports.addClient = async (req, res) => {
 }
 
 
-exports.deleteClient = async (req, res) => {
+export const deleteClient = async (req, res) => {
     let {
         id
     } = req.body; // Get user data from request body
