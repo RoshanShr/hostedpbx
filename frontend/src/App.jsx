@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import './App.css'
-import Login from './components/Login/index';
 import PageNotFound from './components/404';
-import Register from './components/Register';
 import Clients from './components/Clients';
 import Reports from './components/Reports';
+import Auth from './components/Auth/Auth';
 import { BrowserRouter, Routes, Route,Navigate, createBrowserRouter, Outlet  } from 'react-router-dom';
 import Private from './components/Private'
 import { UserContext } from './contexts/UserContext'
@@ -63,17 +62,17 @@ const [loggedUser, setLoggedUser]
             <Route
               path="/"
               element={
-                 <Login />
+                 <Auth/>
               }
             />
             <Route
               path="/login"
               element={
-                loggedUser != null  ? <Navigate to="/clients" /> : <Login />
+                loggedUser != null  ? <Navigate to="/clients" /> : <Auth/>
               }
             />
-            <Route path='/logout' element={<Login />}></Route>
-            <Route path='/register' element={<Register />}></Route>
+            <Route path='/logout' element={<Auth />}></Route>
+            <Route path='/register' element={<Auth isRegister={true}/>}></Route>
             <Route path='/reports'  element={<Private Component={Reports} />}></Route>
             <Route path='/clients' element={<Private Component={Clients} />} />
             <Route path='*' element={<PageNotFound />}></Route>

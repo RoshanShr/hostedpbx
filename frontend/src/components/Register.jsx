@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerSchema } from "../schemas/registerSchema";
 import { useFormik } from 'formik';
-import { useRegisterUser } from "../api/register/registerUserApi";
+import { useRegisterUser } from "../api/auth/registerUserApi";
 
 const initialValues = {
     username: "",
