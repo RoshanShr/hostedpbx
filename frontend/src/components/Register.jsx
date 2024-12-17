@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { registerSchema } from "../schemas/registerSchema";
 import { useFormik } from 'formik';
+import { useRegisterUser } from "../api/register/registerUserApi";
 
 const initialValues = {
     username: "",
@@ -14,8 +15,8 @@ const initialValues = {
 } 
 
 export default function Register() {
-    const apiUrl = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
+    const registerUserMutation = useRegisterUser();
 
     const formik = useFormik({
         initialValues: initialValues,
@@ -25,28 +26,9 @@ export default function Register() {
             action.resetForm();
         }
     })
-
-    function submitData(userCreds) {
-        fetch(apiUrl + "register", {
-            method: "POST",
-            body: JSON.stringify(userCreds),
-            headers: {
-                "Content-Type": "application/json"
-            }
-
-        }).then((response) => {
-            if (response.status != 201) {
-                toast.error("Error while registering");
-            } else {
-                toast.success("User registered successfully");
-            }
-
-            return response.json();
-
-        }).catch((err) => {
-            console.log(err)
-        })
-
+    
+    function submitData(data) {
+        registerUserMutation.mutate(data)
     }
 
     function loginPage() {
@@ -86,7 +68,7 @@ export default function Register() {
                         {formik.errors.password && formik.touched.password ? <p className="form-error">{formik.errors.password}</p> : null}
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="confirm_password" className="form-label">Password:</label>
+                        <label htmlFor="confirm_password" className="form-label">Confirm password:</label>
                         <input
                             type="confirm_password"
                             id="confirm_password" onChange={formik.handleChange} onBlur={formik.handleBlur}

@@ -4,7 +4,9 @@ import { useState, useContext } from "react";
 import { ToastContainer } from 'react-toastify';
 import { useFormik } from 'formik';
 import { clientSchema } from "../schemas/clientSchema";
-import { useGetClients, useAddClient, useDeleteClient } from "../api/clientApi";
+import { useDeleteClient } from "../api/clients/deleteClientsApi";
+import { useGetClients } from "../api/clients/getClientsApi";
+import { useAddClient } from "../api/clients/addClientsApi";
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
@@ -19,7 +21,6 @@ const initialValues = {
 const Clients = () => {
 
     const loggedData = useContext(UserContext);
-
     const [showForm, setShowForm] = useState(false);
 
     const { data: clients, isLoading, isError, error } = useGetClients(loggedData);

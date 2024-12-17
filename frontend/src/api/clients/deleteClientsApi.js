@@ -1,6 +1,5 @@
 import axios from "axios";
 import {
-    useQuery,
     useMutation,
     useQueryClient
 } from "react-query";
@@ -18,30 +17,8 @@ const clientApi = axios.create({
     baseURL: apiUrl
 });
 
-export const getClient = async (loggedData) => {
-    const response = await clientApi.get("/clients", {
-        headers: {
-            "Authorization": `Bearer ${loggedData.loggedUser.token}`
-        }
-    });
-    return response.data;
-}
 
 
-export const addClient = async (
-    data
-) => {
-    await clientApi.post("/clients", data.clientData, {
-        headers: {
-            "Authorization": `Bearer ${data.loggedData.loggedUser.token}`
-        }
-    });
-
-}
-
-export const updateClient = async (client) => {
-    return await clientApi.post(`/clients/${client.id}`, client);
-}
 
 export const deleteClient = async ({
     loggedData,
@@ -75,31 +52,8 @@ export const deleteClient = async ({
 
 }
 
-// React Query Hooks
 
-export const useGetClients = (loggedData) => {
-    return useQuery(["clients"], () => getClient(loggedData), {
-        onError: (error) => {
-            toast.error(`Failed to fetch clients: ${error.message}`);
-        },
-    });
-};
 
-export const useAddClient = (loggedData) => {
-    const queryClient = useQueryClient();
-    return useMutation((clientData) => addClient({
-        loggedData,
-        clientData
-    }), {
-        onSuccess: () => {
-            queryClient.invalidateQueries("clients");
-            notify("success", "Client added successfully")
-        },
-        onError: (error) => {
-            notify("error", `Error while adding client:${error.message}`)
-        },
-    });
-};
 
 export const useDeleteClient = (loggedData) => {
     const queryClient = useQueryClient();
@@ -116,4 +70,3 @@ export const useDeleteClient = (loggedData) => {
         },
     });
 }
-export default clientApi;

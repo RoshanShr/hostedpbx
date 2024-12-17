@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from "../components/Sidebar";
 import { UserContext } from "../contexts/UserContext";
-import { useGetReports  } from "../api/reportsApi";
+import { useGetReports  } from "../api/reports/getReportsApi";
 import { useState, useContext } from "react";
 
 const Reports = () => {
