@@ -1,12 +1,30 @@
 import Client from '../models/clientModel.js';
 
-import { AppDataSource, AppDataSource2 } from '../config/database.js';
+import {
+    AppDataSource,
+    AppDataSource2
+} from '../config/database.js';
 
 export const getClients = async (req, res) => {
     try {
-        const clientRepository = AppDataSource.getRepository('Client'); // Get repository by entity name
-        const clients = await clientRepository.find(); // Fetch all users
-        res.json(clients); // Return users as JSON
+        const page = parseInt(req.query.page, 10) || 1; // Default to page 1
+        const limit = parseInt(req.query.limit, 10) || 10; // Default to 10 items per page
+        const offset = (page - 1) * limit; // Calculate the offset for the query
+
+        const clientRepository = AppDataSource.getRepository('Client'); // Get repository by entity name\
+        // Fetch clients with pagination
+        const [clients, totalItems] = await clientRepository.findAndCount({
+            skip: offset, // Skip the records before the current page
+            take: limit, // Limit the number of records to fetch
+        });
+
+        // Return paginated response
+        res.json({
+            data: clients, // The clients for the current page
+            currentPage: page, // The current page number
+            totalItems, // Total number of items
+            totalPages: Math.ceil(totalItems / limit), // Total number of pages
+        });
     } catch (err) {
         console.error('Error fetching clients:', err);
         res.status(500).send('Database error');
