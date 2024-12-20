@@ -1,4 +1,4 @@
-import React, { useState, useContext,useEffect  } from "react";
+import { useState, useContext  } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { useGetReports } from "../../api/reports/getReportsApi";
 import Pagination from "../../common/Pagination"; // Import the pagination component

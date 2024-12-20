@@ -1,8 +1,8 @@
 import AuthHandler from "../core/AuthHandler";
 import AuthFlowWrapper from "../templates/Authflow";
 import CommonWrapper from "../templates/CommonFlow";
-import Login from "./Auth/Login";
-import Register from "./Auth/Register";
+import Login from "./Login";
+import Register from "./Register";
 import Clients from "./Clients/Clients";
 import Reports from "./Reports/Reports";
 import InvalidPage from "./PageNotFound/InvalidPage";
@@ -33,7 +33,7 @@ export const pages = [
       },
       {
         path: "clients",
-        element: <CommonWrapper />, // New wrapper component for Clients
+        element: <CommonWrapper />, 
         children: [
           {
             path: "",
@@ -43,7 +43,7 @@ export const pages = [
       },
       {
         path: "reports",
-        element: <CommonWrapper />, // New wrapper component for Clients
+        element: <CommonWrapper />, 
         children: [
           {
             path: "",
@@ -52,12 +52,13 @@ export const pages = [
     
         ],
       },
-      {
-        path: "*", // Catch-all route for invalid paths
-        element: <InvalidPage />, // Directly render InvalidPage
-      },
-      
+  
     ],
     
   },
+  {
+    path: "*", // Catch-all route for invalid paths
+    element: <InvalidPage />, // Directly render InvalidPage
+  },
+  
 ];
