@@ -1,8 +1,7 @@
 import React, { useState, useContext,useEffect  } from "react";
-import Sidebar from "../components/Sidebar";
-import { UserContext } from "../contexts/UserContext";
-import { useGetReports } from "../api/reports/getReportsApi";
-import Pagination from "../common/Pagination"; // Import the pagination component
+import { UserContext } from "../../contexts/UserContext";
+import { useGetReports } from "../../api/reports/getReportsApi";
+import Pagination from "../../common/Pagination"; // Import the pagination component
 
 const Reports = () => {
   const loggedData = useContext(UserContext);
@@ -31,8 +30,7 @@ const Reports = () => {
 
 
   return (
-    <div className="d-flex">
-      <Sidebar />
+
       <div className="flex-grow-1 p-4">
         <h2>Reports</h2>
 
@@ -98,7 +96,6 @@ const Reports = () => {
           />
         )}
       </div>
-    </div>
   );
 };
 

@@ -3,6 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { registerSchema } from "../../schemas/registerSchema";
 import { useFormik } from "formik";
 import { useRegisterUser } from "../../api/auth/registerUserApi";
+import { Link } from "react-router-dom";
 
 const initialValuesRegister = {
   username: "",
@@ -103,6 +104,9 @@ function Register() {
           Register
         </button>
       </form>
+      <button className="btn w-100 btn" >
+            {`Already have an account?`} <Link to="/login">Login</Link>
+        </button>
     </div>
   );
 };

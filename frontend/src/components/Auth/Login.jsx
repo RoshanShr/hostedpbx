@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
 import { loginSchema } from "../../schemas/loginSchema";
@@ -66,6 +67,9 @@ function Login() {
           </button>
         </div>
       </form>
+      <button className="btn w-100 btn" >
+            {`Need an account?`} <Link to="/register">Sign Up</Link>
+        </button>
     </div>
   );
 }

@@ -1,16 +1,15 @@
-import Sidebar from "../components/Sidebar";
-import { UserContext } from "../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 import { useState, useContext } from "react";
 import { ToastContainer } from "react-toastify";
 import { useFormik } from "formik";
-import { clientSchema } from "../schemas/clientSchema";
-import { useDeleteClient } from "../api/clients/deleteClientsApi";
-import { useGetClients } from "../api/clients/getClientsApi";
-import { useAddClient } from "../api/clients/addClientsApi";
+import { clientSchema } from "../../schemas/clientSchema";
+import { useDeleteClient } from "../../api/clients/deleteClientsApi";
+import { useGetClients } from "../../api/clients/getClientsApi";
+import { useAddClient } from "../../api/clients/addClientsApi";
 
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
-import Pagination from "../common/Pagination"; // Import the pagination component
+import Pagination from "../../common/Pagination"; // Import the pagination component
 
 const initialValues = {
   name: "",
@@ -77,10 +76,8 @@ const Clients = () => {
     deleteClientMutation.mutate(id);
   }
   return (
-    <div className="d-flex">
-      <Sidebar />
-      <ToastContainer />
       <div className="flex-grow-1 p-4">
+      <ToastContainer />
         <div>
           {/* Button to toggle form */}
           <button
@@ -186,7 +183,6 @@ const Clients = () => {
           />
         )}
       </div>
-    </div>
   );
 };
 
