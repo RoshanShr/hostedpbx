@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 
- const ClientWrapper = () => {
+ const CommonWrapper = () => {
   return (
     <div className="d-flex">
       <Sidebar />
@@ -10,4 +10,4 @@ import Sidebar from "../../components/Sidebar";
   );
 };
 
-export default ClientWrapper;
+export default CommonWrapper;

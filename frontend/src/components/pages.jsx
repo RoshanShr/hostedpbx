@@ -1,6 +1,6 @@
 import AuthHandler from "../core/AuthHandler";
 import AuthFlowWrapper from "../templates/Authflow";
-import ClientWrapper from "../templates/CommonFlow";
+import CommonWrapper from "../templates/CommonFlow";
 import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 import Clients from "./Clients/Clients";
@@ -33,7 +33,7 @@ export const pages = [
       },
       {
         path: "clients",
-        element: <ClientWrapper />, // New wrapper component for Clients
+        element: <CommonWrapper />, // New wrapper component for Clients
         children: [
           {
             path: "",
@@ -43,7 +43,7 @@ export const pages = [
       },
       {
         path: "reports",
-        element: <ClientWrapper />, // New wrapper component for Clients
+        element: <CommonWrapper />, // New wrapper component for Clients
         children: [
           {
             path: "",
